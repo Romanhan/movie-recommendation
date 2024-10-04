@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 .settings/
 *.class
+application.properties
 
 ### STS ###
 .apt_generated
