@@ -30,7 +30,7 @@ public class MovieApiServiceTest {
     void testGetMovieId() {
         MovieDto movie = movieApiService.getMovie(550L);
         assertNotNull(movie);
-        assertEquals(movie.getTitle(), "Fight Club");
+        assertEquals("Fight Club", movie.getTitle());
     }
 
 }
