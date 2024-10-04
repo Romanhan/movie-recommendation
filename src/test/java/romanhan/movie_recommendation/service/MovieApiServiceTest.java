@@ -1,6 +1,8 @@
 package romanhan.movie_recommendation.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -23,4 +25,12 @@ public class MovieApiServiceTest {
         assertFalse(movies.isEmpty());
         assertTrue(movies.get(0).getTitle().contains("Batman"));
     }
+
+    @Test
+    void testGetMovieId() {
+        MovieDto movie = movieApiService.getMovie(550L);
+        assertNotNull(movie);
+        assertEquals(movie.getTitle(), "Fight Club");
+    }
+
 }

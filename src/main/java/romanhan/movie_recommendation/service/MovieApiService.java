@@ -35,4 +35,15 @@ public class MovieApiService {
                 .block();
     }
 
+    public MovieDto getMovie(Long movieId) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/movie/{movieId}")
+                        .queryParam("api_key", apiKey)
+                        .build(movieId))
+                .retrieve()
+                .bodyToMono(MovieDto.class)
+                .block();
+    }
+
 }
