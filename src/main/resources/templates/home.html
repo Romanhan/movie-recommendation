@@ -3,13 +3,14 @@
 
 <head>
     <title>Movie Recommender</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 
 <body>
     <h1>Movie Recommender</h1>
-    <form action="/search" method="get">
-        <input type="text" name="query" placeholder="Search movies...">
-        <button type="submit">Search</button>
+    <form class="search-form" form action="/search" method="get">
+        <input type="text" name="query" class="search-input" placeholder="Search movies...">
+        <button type="submit" class="search-button">Search</button>
     </form>
 </body>
 

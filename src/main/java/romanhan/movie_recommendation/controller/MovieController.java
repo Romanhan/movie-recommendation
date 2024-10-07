@@ -30,6 +30,7 @@ public class MovieController {
         if (query != null && !query.isEmpty()) {
             List<MovieDto> movies = movieApiService.searchMovies(query);
             model.addAttribute("movies", movies);
+            model.addAttribute("searchTitle", "Result for: " + query);
         }
         return "search";
     }
