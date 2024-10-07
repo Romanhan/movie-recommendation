@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${pageTitle}">Default Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .movie-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .movie-card {
+            display: flex;
+            background-color: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-poster img {
+            width: 100px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .movie-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .movie-title {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .movie-year {
+            color: #666;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 th:text="${pageTitle}">Default Heading</h1>
+
+        <!-- Show movies if any exist -->
+        <div class="movie-list" th:if="${movies != null}">
+            <div class="movie-card" th:each="movie : ${movies}">
+                <div class="movie-poster">
+                    <img th:if="${movie.posterPath != null}"
+                        th:src="'https://image.tmdb.org/t/p/w200' + ${movie.posterPath}" th:alt="${movie.title}">
+                </div>
+                <div class="movie-info">
+                    <h2 class="movie-title" th:text="${movie.title}">Movie Title</h2>
+                    <span class="movie-year"
+                        th:text="${#strings.length(movie.releaseDate) >= 4 ? #strings.substring(movie.releaseDate,0,4) : ''}">
+                        Year
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
