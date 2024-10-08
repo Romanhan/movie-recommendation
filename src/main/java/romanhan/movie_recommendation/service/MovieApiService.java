@@ -1,15 +1,19 @@
 package romanhan.movie_recommendation.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import jakarta.annotation.PostConstruct;
+import romanhan.movie_recommendation.dto.GenreListResponse;
 import romanhan.movie_recommendation.dto.MovieDto;
 import romanhan.movie_recommendation.dto.MovieSearchResponse;
-
-import java.util.List;
 
 @Service
 public class MovieApiService {
@@ -18,12 +22,29 @@ public class MovieApiService {
 
 	private final WebClient webClient;
 	private final String apiKey;
+	private List<MovieDto.Genre> allGenres = new ArrayList<>();
 
 	public MovieApiService(@Value("${tmdb.api.key}") String apiKey) {
 		this.apiKey = apiKey;
 		this.webClient = WebClient.builder()
 				.baseUrl("https://api.themoviedb.org/3")
 				.build();
+	}
+
+	@PostConstruct
+	public void initializeGenres() {
+		GenreListResponse response = webClient.get()
+				.uri(uriBuilder -> uriBuilder
+						.path("/genre/movie/list")
+						.queryParam("api_key", apiKey)
+						.build())
+				.retrieve()
+				.bodyToMono(GenreListResponse.class)
+				.block();
+
+		if (response != null && response.getGenres() != null) {
+			this.allGenres = response.getGenres();
+		}
 	}
 
 	public List<MovieDto> searchMovies(String query) {
@@ -38,15 +59,15 @@ public class MovieApiService {
 				.map(MovieSearchResponse::getResults)
 				.block();
 
+		// Assign genres to movies
 		for (MovieDto movie : movies) {
-			MovieDto fullMovieDetails = getMovie(movie.getId()); // Fetch full movie details (including genres)
-			movie.setGenres(fullMovieDetails.getGenres()); // Set genres from the detailed response
+			if (movie.getGenreIds() != null) {
+				movie.setGenres(
+						allGenres.stream()
+								.filter(genre -> movie.getGenreIds().contains(genre.getId()))
+								.collect(Collectors.toList()));
+			}
 		}
-
-		// for (MovieDto movie : movies) {
-		// logger.info("Movie Title: {}, Raiting: {}", movie.getTitle(),
-		// movie.getRaiting());
-		// }
 
 		return movies;
 	}
