@@ -19,7 +19,9 @@ public class MovieController {
     }
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        List<MovieDto> trendingMovies = movieApiService.getTrendingMovies();
+        model.addAttribute("trendingMovies", trendingMovies);
         return "home";
     }
 
