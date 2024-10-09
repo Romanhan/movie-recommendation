@@ -19,6 +19,7 @@ Version 1.0 features:
   - [x] Year the movie was released.
   - [x] Movie rating to assess popularity and quality.
   - [x] A list of associated genres to explore similar content.
+  - [X] Movie overview
 - [x] Top 10 movies of the week: Display the top 10 trending movies on main page.
 - [ ] Set up a database to save users
 - [ ] Add user reristration/login 
@@ -34,5 +35,6 @@ Version 1.0 features:
 ![{3AED9D0B-983E-40E3-A140-C1BEAF3D2FB6}](https://github.com/user-attachments/assets/27bc7bc0-6d4b-4ffc-a3a7-338a1c05b4b9)
 
 ## Search page
-![{13561F19-C30A-4E9F-A48D-AC4C2DB6D312}](https://github.com/user-attachments/assets/f6c714d5-197f-4919-8b3b-7b8273b3af96)
+![{6D3A20EE-A3EA-41E8-9A4F-09AA2D51EE29}](https://github.com/user-attachments/assets/e00120ce-1377-4f34-b7d0-a2107bd884b0)
+
 
