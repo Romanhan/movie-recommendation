@@ -21,6 +21,7 @@
                 <div class="movie-poster">
                     <img th:if="${movie.posterPath != null}"
                         th:src="'https://image.tmdb.org/t/p/w200' + ${movie.posterPath}" th:alt="${movie.title}">
+                    <div class="no-poster" th:if="${movie.posterPath == null}">No Poster Available</div>
                 </div>
                 <div class="movie-info">
                     <h2 class="movie-title" th:text="${movie.title}">Movie Title</h2>
@@ -33,14 +34,17 @@
                         </span>
                     </span>
                     <div class="movie-genre">
-                        <div th:each="genre : ${movie.genres}">
-                            <span th:text="${genre.name}"></span>
-                            </span>
-                        </div>
+                        <div th:each="genre : ${movie.genres}"><span th:text="${genre.name}"></span></div>
                     </div>
+                    <div class="movie-description">
+                        <div th:text="${movie.overview}"></div>
+                        <div th:if="${movie.overview == null}">Overview</div>
+                    </div>
+
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </body>
 
