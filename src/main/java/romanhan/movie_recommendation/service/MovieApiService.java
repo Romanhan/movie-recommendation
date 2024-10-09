@@ -59,15 +59,7 @@ public class MovieApiService {
 				.map(MovieSearchResponse::getResults)
 				.block();
 
-		// Assign genres to movies
-		for (MovieDto movie : movies) {
-			if (movie.getGenreIds() != null) {
-				movie.setGenres(
-						allGenres.stream()
-								.filter(genre -> movie.getGenreIds().contains(genre.getId()))
-								.collect(Collectors.toList()));
-			}
-		}
+		assignGenresToMovies(movies);
 
 		return movies;
 	}
@@ -81,6 +73,35 @@ public class MovieApiService {
 				.retrieve()
 				.bodyToMono(MovieDto.class)
 				.block();
+	}
+
+	public List<MovieDto> getTrendingMovies() {
+		List<MovieDto> movies = webClient.get()
+				.uri(uriBuilder -> uriBuilder
+						.path("/trending/movie/week")
+						.queryParam("api_key", apiKey)
+						.build())
+				.retrieve()
+				.bodyToMono(MovieSearchResponse.class)
+				.map(MovieSearchResponse::getResults)
+				.block();
+
+		assignGenresToMovies(movies);
+
+		return movies.stream()
+				.limit(10)
+				.collect(Collectors.toList());
+	}
+
+	private void assignGenresToMovies(List<MovieDto> movies) {
+		for (MovieDto movie : movies) {
+			if (movie.getGenreIds() != null) {
+				movie.setGenres(
+						allGenres.stream()
+								.filter(genre -> movie.getGenreIds().contains(genre.getId()))
+								.collect(Collectors.toList()));
+			}
+		}
 	}
 
 }

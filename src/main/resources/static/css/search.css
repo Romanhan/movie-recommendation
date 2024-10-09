@@ -95,10 +95,7 @@ h1 {
     font-size: 12px;
 }
 
-.movie-rating .fa-star {
-    color: #FFD700;
-}
-
-.movie-rating span {
-    color: black;
+.movie-rating {
+    color: #ffa500;
+    margin-bottom: 5px;
 }
