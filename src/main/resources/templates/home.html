@@ -35,6 +35,9 @@
                         <div th:each="genre, iterStat : ${movie.genres}" th:if="${iterStat.index &lt; 3}">
                             <span th:text="${genre.name}"></span>
                         </div>
+                        <div th:if="${movie.genres.size() &gt; 3}">
+                            <span>...</span>
+                        </div>
                     </div>
                 </div>
             </div>
