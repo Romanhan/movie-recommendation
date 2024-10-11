@@ -3,46 +3,52 @@
 
 <head>
     <title>Movie Recommender</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 
 <body>
-    <h1>Movie Recommender</h1>
-    <form class="search-form" action="/search" method="get">
-        <input type="text" name="query" class="search-input" placeholder="Search movies...">
-        <button type="submit" class="search-button">Search</button>
-    </form>
+    <div th:replace="~{header :: header}"></div>
+    <main>
+        <form class="search-form" action="/search" method="get">
+            <input type="text" name="query" class="search-input" placeholder="Search movies...">
+            <button type="submit" class="search-button">Search</button>
+        </form>
 
-    <section class="trending-section">
-        <h2>Trending This Week</h2>
-        <div class="movie-list">
-            <div class="movie-card" th:each="movie : ${trendingMovies}">
-                <div class="movie-poster">
-                    <img th:if="${movie.posterPath != null}"
-                        th:src="'https://image.tmdb.org/t/p/w200' + ${movie.posterPath}" th:alt="${movie.title}">
-                </div>
-                <div class="movie-info">
-                    <h2 class="movie-title" th:text="${movie.title}">Movie Title</h2>
-                    <span class="year-rating-container">
-                        <span class="movie-year"
-                            th:text="${#strings.length(movie.releaseDate) >= 4 ? #strings.substring(movie.releaseDate,0,4) : ''}">
-                            Year</span>
-                        <span class="movie-rating">
-                            ★ <span th:text="${#numbers.formatDecimal(movie.rating, 1, 1)}"></span>
+        <section class="trending-section">
+            <h2>Trending This Week</h2>
+            <div class="movie-list">
+                <div class="movie-card" th:each="movie : ${trendingMovies}">
+                    <div class="movie-poster">
+                        <img th:if="${movie.posterPath != null}"
+                            th:src="'https://image.tmdb.org/t/p/w200' + ${movie.posterPath}" th:alt="${movie.title}">
+                    </div>
+                    <div class="movie-info">
+                        <h2 class="movie-title" th:text="${movie.title}">Movie Title</h2>
+                        <span class="year-rating-container">
+                            <span class="movie-year"
+                                th:text="${#strings.length(movie.releaseDate) >= 4 ? #strings.substring(movie.releaseDate,0,4) : ''}">
+                                Year</span>
+                            <span class="movie-rating">
+                                ★ <span th:text="${#numbers.formatDecimal(movie.rating, 1, 1)}"></span>
+                            </span>
                         </span>
-                    </span>
-                    <div class="movie-genre">
-                        <div th:each="genre, iterStat : ${movie.genres}" th:if="${iterStat.index &lt; 3}">
-                            <span th:text="${genre.name}"></span>
-                        </div>
-                        <div th:if="${movie.genres.size() &gt; 3}">
-                            <span>...</span>
+                        <div class="movie-genre">
+                            <div th:each="genre, iterStat : ${movie.genres}" th:if="${iterStat.index &lt; 3}">
+                                <span th:text="${genre.name}"></span>
+                            </div>
+                            <div th:if="${movie.genres.size() &gt; 3}">
+                                <span>...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
+
+    <div th:replace="~{footer :: footer}"></div>
+
 </body>
 
 </html>
