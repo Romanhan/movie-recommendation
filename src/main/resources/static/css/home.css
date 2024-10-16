@@ -19,6 +19,12 @@
     padding: 10px;
 }
 
+
+.movie-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .movie-card {
     background-color: white;
     border-radius: 8px;
@@ -29,6 +35,8 @@
 
 .movie-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
 }
 
 .movie-poster {
@@ -49,6 +57,7 @@
 }
 
 .movie-title {
+    text-align: center;
     font-size: 16px;
     font-weight: bold;
     margin: 0 0 4px 0;
