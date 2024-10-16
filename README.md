@@ -37,4 +37,8 @@ Version 1.0 features:
 ## Search page
 ![{6D3A20EE-A3EA-41E8-9A4F-09AA2D51EE29}](https://github.com/user-attachments/assets/e00120ce-1377-4f34-b7d0-a2107bd884b0)
 
+## Movie details page
+![2024-10-16_15h31_21](https://github.com/user-attachments/assets/84d0e740-2c3e-4fee-a15c-6b16cf6fc912)
+
+
 
