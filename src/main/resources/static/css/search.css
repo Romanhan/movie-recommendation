@@ -22,11 +22,23 @@ h2 {
 }
 
 .movie-card {
-    display: flex;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 6px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 170px;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.movie-link {
+    display: flex;
+    text-decoration: none;
+    color: inherit;
 }
 
 .movie-poster img {
@@ -49,10 +61,11 @@ h2 {
 }
 
 .movie-info {
-    padding: 10px 0px 10px 20px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    overflow: hidden;
 }
 
 .movie-title {
@@ -93,4 +106,8 @@ h2 {
 .movie-description {
     margin: 10px 10px 10px 0px;
     font-size: 13px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

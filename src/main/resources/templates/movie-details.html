@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Movie Details</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/movie-details.css}">
+</head>
+
+<body>
+    <div th:replace="~{header :: header}"></div>
+    <main class="container">
+        <div class="movie-card">
+            <h1 class="movie-title" th:text="${movie.title}">Movie Title</h1>
+            <div class="movie-content">
+                <div class="movie-poster">
+                    <img th:if="${movie.posterPath != null}"
+                        th:src="'https://image.tmdb.org/t/p/w500' + ${movie.posterPath}" th:alt="${movie.title}">
+                    <div class="no-poster" th:if="${movie.posterPath == null}">No Poster Available</div>
+                </div>
+
+                <div class="movie-info">
+                    <p class="release-date">Release Date: <span class="release-date-number"
+                            th:text="${movie.releaseDate}">Release Date</span></p>
+                    <p class="rating">Rating: <span class="rating-number"> ★ </span> <span class="rating-number"
+                            th:text="${#numbers.formatDecimal(movie.rating, 1, 1)} + ' / 10'">Rating</span></p>
+                    <div class="genres">
+                        <span>Genres:</span>
+                        <ul>
+                            <li th:each="genre : ${movie.genres}" th:text="${genre.name}">Genre</li>
+                        </ul>
+                    </div>
+                    <p class="overview" th:text="${movie.overview}">Movie Overview</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div th:replace="~{footer :: footer}"></div>
+
+</body>
+
+</html>
