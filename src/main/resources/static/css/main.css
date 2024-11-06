@@ -13,42 +13,6 @@ a {
     color: inherit;
 }
 
-/* Header */
-
-h1 {
-    font-size: 15px;
-}
-
-.header {
-    background-color: #ffffff;
-    text-align: center;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-nav {
-    display: flex;
-    height: 50px;
-    align-items: center;
-    justify-content: space-between;
-}
-
-nav ul li {
-    display: inline-block;
-    list-style: none;
-    padding: 10px;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: inherit;
-    font-weight: bolder;
-}
-
-nav ul li a :hover {
-    text-decoration: underline;
-}
-
 /* Search form and button */
 
 .search-form {
