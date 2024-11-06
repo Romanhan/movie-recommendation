@@ -1,20 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <title>Header</title>
 </head>
 
 <body>
-    <header class="header">
+    <header class="header" th:fragment="header">
+        <link rel="stylesheet" th:href="@{/css/header.css}">
         <nav>
             <a href="/" class="site-name">
                 <h1>Movie Recommender</h1>
             </a>
             <ul>
-                <li><a href="/login">Login</a></li>
                 <li><a href="/">Home</a></li>
                 <li><a href="/search">Search</a></li>
+                <li sec:authorize="!isAuthenticated()">
+                    <a href="/login">Login</a>
+                </li>
+                <li sec:authorize="!isAuthenticated()">
+                    <a href="/register">Register</a>
+                </li>
+
+                <li sec:authorize="isAuthenticated()" class="user-info">
+                    <div class="user-profile">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="profile-icon" width="24" height="24"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="10" r="3"></circle>
+                            <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"></path>
+                        </svg>
+                        <span sec:authentication="name" class="username"></span>
+                </li>
+                </div>
+                <li sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post" class="logout-form">
+                        <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                </li>
             </ul>
         </nav>
     </header>
