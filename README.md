@@ -21,8 +21,8 @@ Version 1.0 features:
   - [x] A list of associated genres to explore similar content.
   - [X] Movie overview
 - [x] Top 10 movies of the week: Display the top 10 trending movies on main page.
-- [ ] Set up a database to save users
-- [ ] Add user reristration/login 
+- [x] Set up a database to save users
+- [x] Add user reristration/login 
 - [ ] Create recommendation logic
 
 ## Tech Stack
