@@ -5,6 +5,7 @@
     <title>Movie Details</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/movie-details.css}">
+    <link rel="stylesheet" th:href="@{/css/star-rating.css}">
 </head>
 
 <body>
@@ -24,9 +25,32 @@
                             th:text="${movie.releaseDate}">Release Date</span></p>
                     <p class="rating">Rating: <span class="rating-number"> ★ </span> <span class="rating-number"
                             th:text="${#numbers.formatDecimal(movie.rating, 1, 1)} + ' / 10'">Rating</span></p>
+
+                    <div class="rating-section" sec:authorize="isAuthenticated()">
+                        <div th:if="${userRating != null}" class="user-rating">
+                            Your rating: <span th:text="${userRating.rating}"></span>/5
+                        </div>
+
+                        <form th:action="@{/movie/{id}/rate(id=${movie.id})}" method="post" class="rating-form">
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="rating" value="5" />
+                                <label for="star5"></label>
+                                <input type="radio" id="star4" name="rating" value="4" />
+                                <label for="star4"></label>
+                                <input type="radio" id="star3" name="rating" value="3" />
+                                <label for="star3"></label>
+                                <input type="radio" id="star2" name="rating" value="2" />
+                                <label for="star2"></label>
+                                <input type="radio" id="star1" name="rating" value="1" />
+                                <label for="star1"></label>
+                            </div>
+                            <button type="submit" class="rate-button">Rate</button>
+                        </form>
+                    </div>
+
                     <div class="genres">
-                        <span>Genres:</span>
-                        <ul>
+                        <span class="genres-label">Genres:</span>
+                        <ul class="genres-list">
                             <li th:each="genre : ${movie.genres}" th:text="${genre.name}">Genre</li>
                         </ul>
                     </div>
