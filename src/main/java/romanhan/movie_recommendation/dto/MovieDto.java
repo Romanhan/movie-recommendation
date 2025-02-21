@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -22,6 +23,7 @@ public class MovieDto {
     private List<Genre> genres;
 
     @Data
+    @AllArgsConstructor
     public static class Genre {
         private Long id;
         private String name;
