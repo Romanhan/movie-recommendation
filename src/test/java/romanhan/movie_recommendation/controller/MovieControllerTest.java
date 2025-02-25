@@ -28,7 +28,7 @@ public class MovieControllerTest {
     private MovieRatingService movieRatingService;
 
     @Test
-    @WithMockUser(username = "user", password = "password", roles = "USER")
+    @WithMockUser
     void shouldReturnHomePageWithTrendingMovies() throws Exception {
         MovieDto movie = new MovieDto();
         movie.setId(1L);
@@ -46,8 +46,22 @@ public class MovieControllerTest {
     }
 
     @Test
-    void testMovie() {
+    @WithMockUser
 
+    void shouldReturnSearchResult() throws Exception {
+        MovieDto movie = new MovieDto();
+        movie.setId(3L);
+        movie.setTitle("Movie Title2");
+        movie.setReleaseDate("2023-10-16");
+        movie.setGenres(List.of(new MovieDto.Genre(4L, "Action"), new MovieDto.Genre(5L, "Adventure")));
+
+        List<MovieDto> moviesList = List.of(movie);
+        when(movieApiService.searchMovies("test")).thenReturn(moviesList);
+
+        mockMvc.perform(get("/search").param("query", "test"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("search"))
+                .andExpect(model().attribute("movies", moviesList));
     }
 
     @Test
@@ -56,7 +70,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    void testSearch() {
+    void testMovie() {
 
     }
 }
