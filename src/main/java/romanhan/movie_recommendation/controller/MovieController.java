@@ -56,9 +56,9 @@ public class MovieController {
     }
 
     @PostMapping("/movie/{id}/rate")
-    public String rateMovie(@PathVariable Long id, @RequestParam int rating, Authentication authetication) {
-        if (authetication != null) {
-            movieRatingService.rateMovie(authetication.getName(), id, rating);
+    public String rateMovie(@PathVariable Long id, @RequestParam int rating, Authentication authentication) {
+        if (authentication != null) {
+            movieRatingService.rateMovie(authentication.getName(), id, rating);
         }
         return "redirect:/movie/" + id;
     }
