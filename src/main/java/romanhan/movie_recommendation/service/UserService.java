@@ -7,7 +7,7 @@ public interface UserService {
 
     User findByUsername(String name);
 
-    boolean existsByUserName(String name);
+    boolean existsByUsername(String name);
 
     boolean existsByEmail(String email);
 }

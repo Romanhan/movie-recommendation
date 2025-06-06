@@ -67,8 +67,8 @@ public class UserServiceImplTest {
         userService.registerUser(username, email, "password");
 
         // Then
-        assertTrue(userService.existsByUserName(username));
-        assertFalse(userService.existsByUserName("notName"));
+        assertTrue(userService.existsByUsername(username));
+        assertFalse(userService.existsByUsername("notName"));
     }
 
 }
