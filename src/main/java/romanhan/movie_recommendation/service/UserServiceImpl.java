@@ -19,10 +19,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(String username, String email, String password) {
-        if (existsByUserName(username)) {
+        if (existsByUsername(username)) {
             throw new IllegalArgumentException("Username already exists: " + username);
         }
-        if (existsByUserName(email)) {
+        if (existsByEmail(email)) {
             throw new IllegalArgumentException("Email already exists: " + email);
         }
 
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByUserName(String username) {
+    public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
