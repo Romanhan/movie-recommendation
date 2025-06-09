@@ -56,7 +56,6 @@ public class MovieControllerTest {
 
     @Test
     @WithMockUser
-
     void shouldReturnSearchResult() throws Exception {
         MovieDto movie = new MovieDto();
         movie.setId(3L);
