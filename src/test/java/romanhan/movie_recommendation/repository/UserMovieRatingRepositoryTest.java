@@ -11,12 +11,12 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import romanhan.movie_recommendation.entity.User;
 import romanhan.movie_recommendation.entity.UserMovieRating;
 
-@SpringBootTest
+@DataJpaTest
 public class UserMovieRatingRepositoryTest {
 
     @Autowired
@@ -29,7 +29,6 @@ public class UserMovieRatingRepositoryTest {
         // Given
         Long movieId = 1L;
         User user = new User();
-        user.setId(1L);
         user.setUsername("name");
         user.setPassword("pass");
         user.setEmail("mail@gmail.com");
