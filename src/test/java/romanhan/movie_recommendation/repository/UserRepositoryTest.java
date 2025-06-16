@@ -7,11 +7,11 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import romanhan.movie_recommendation.entity.User;
 
-@SpringBootTest
+@DataJpaTest
 public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
