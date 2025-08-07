@@ -1,8 +1,7 @@
 package romanhan.movie_recommendation.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -37,5 +36,31 @@ public class RecommendationService {
         }
 
         return genrePreferences;
+    }
+
+    public List<MovieDto> findRecommendedMovies(Map<String, Double> getPreferences, List<Long> ratedMovies, int limit) {
+        List<MovieDto> candidateMovies = getCandidateMovies(getPreferences);
+
+        return candidateMovies.stream()
+        .filter(movie -> !ratedMovies.contains(movie.getId()))
+        .limit(limit)
+        .collect(Collectors.toList());
+    }
+
+    private List<MovieDto> getCandidateMovies(Map<String, Double> genrePreference) {
+        Set<MovieDto> allCandidates = new HashSet<>();
+        
+        for (String genre : genrePreference.keySet()) {
+            try {
+                List<MovieDto> genreMovies = movieApiService.searchMovies(genre);
+                allCandidates.addAll(genreMovies);
+            } catch (Exception e) {
+                // TODO. Handle exception, add logger
+            }
+        }
+
+        allCandidates.addAll(movieApiService.getTrendingMovies());
+
+        return new ArrayList<>(allCandidates);
     }
 }

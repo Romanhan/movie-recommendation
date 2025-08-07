@@ -49,5 +49,36 @@ public class RecommendationServiceTest {
         assertEquals(8.0, result.get("Adventure"));
 
     }
+
+    @Test
+    void findRecommendedMovies() {
+        // Given
+        Map<String, Double> genrePreferences = Map.of("Action", 10.0, "Adventure", 5.0);
+        List<Long> ratedMovies = List.of(1L, 2L);
+        int limit = 3;
+        
+        MovieDto movie1 = new MovieDto();
+        movie1.setId(3L);
+        movie1.setTitle("Movie 3");
+        movie1.setGenres(List.of(new MovieDto.Genre(1L, "Action"), new MovieDto.Genre(2L, "Adventure")));
+
+        MovieDto movie2 = new MovieDto();
+        movie2.setId(4L);
+        movie2.setTitle("Movie 4");
+        movie2.setGenres(List.of(new MovieDto.Genre(1L, "Action")));
+
+        when(movieApiService.searchMovies("Action")).thenReturn(List.of(movie1, movie2));
+        when(movieApiService.searchMovies("Adventure")).thenReturn(List.of(movie1));
+
+        when(movieApiService.getTrendingMovies()).thenReturn(List.of());
+
+        // When
+        List<MovieDto> recommendedMovies = recommendationService.findRecommendedMovies(genrePreferences, ratedMovies, limit);
+
+        // Then
+        assertEquals(2, recommendedMovies.size());
+        assertEquals("Movie 3", recommendedMovies.get(0).getTitle());
+        assertEquals("Movie 4", recommendedMovies.get(1).getTitle());
+    }
    
 }
