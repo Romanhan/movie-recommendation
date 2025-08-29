@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import romanhan.movie_recommendation.dto.MovieDto;
+import romanhan.movie_recommendation.entity.User;
 import romanhan.movie_recommendation.entity.UserMovieRating;
 import romanhan.movie_recommendation.repository.UserMovieRatingRepository;
 
@@ -13,12 +14,37 @@ import romanhan.movie_recommendation.repository.UserMovieRatingRepository;
 public class RecommendationService {
     private final UserMovieRatingRepository userMovieRatingRepository;
     private final MovieApiService movieApiService;
+    private final UserService userService;
 
     private static final double LIKED_RATING_THRESHOLD = 7.0;
 
-    public RecommendationService(UserMovieRatingRepository userMovieRatingRepository, MovieApiService movieApiService) {
+    public RecommendationService(UserMovieRatingRepository userMovieRatingRepository, MovieApiService movieApiService, UserService userService) {
         this.userMovieRatingRepository = userMovieRatingRepository;
         this.movieApiService = movieApiService;
+        this.userService = userService;
+    }
+
+    public List<MovieDto> getRecommendationsForUser(String username, int limit) {
+        User user = userService.findByUsername(username);
+
+        List<UserMovieRating> userRatings = userMovieRatingRepository.findByUser(user);
+
+        if (userRatings.isEmpty()) {
+            return movieApiService.getTrendingMovies().stream()
+            .limit(limit)
+            .collect(Collectors.toList());
+        }
+
+        Map<String, Double> genrePreferences = analyzeGenrePreferences(userRatings);
+
+        List<Long> ratedMovies = userRatings.stream()
+        .map(UserMovieRating::getMovieId)
+        .collect(Collectors.toList());
+
+        List<MovieDto> recommendations = findRecommendedMovies(genrePreferences, ratedMovies, limit);
+
+        return recommendations;
+        
     }
 
     public Map<String, Double> analyzeGenrePreferences(List<UserMovieRating> userMovieRatings) {

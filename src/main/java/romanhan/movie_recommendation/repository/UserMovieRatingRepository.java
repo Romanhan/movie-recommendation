@@ -13,4 +13,5 @@ public interface UserMovieRatingRepository extends JpaRepository<UserMovieRating
 
     Optional<UserMovieRating> findByUserAndMovieId(User user, Long movieId);
 
+    List<UserMovieRating> findByUser(User user);
 }
