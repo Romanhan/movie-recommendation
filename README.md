@@ -23,7 +23,8 @@ Version 1.0 features:
 - [x] Top 10 movies of the week: Display the top 10 trending movies on main page.
 - [x] Set up a database to save users
 - [x] Add user reristration/login 
-- [ ] Create recommendation logic
+- [x] Create recommendation logic
+  - [ ] Improove recommendation algorithm
 
 ## Tech Stack
 * Backend: Java 21 (Spring Framework)
