@@ -13,15 +13,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import romanhan.movie_recommendation.dto.MovieDto;
 import romanhan.movie_recommendation.service.MovieApiService;
 import romanhan.movie_recommendation.service.MovieRatingService;
+import romanhan.movie_recommendation.service.RecommendationService;
 
 @Controller
 public class MovieController {
     private final MovieApiService movieApiService;
     private final MovieRatingService movieRatingService;
+    private final RecommendationService recommendationService;
 
-    public MovieController(MovieApiService movieApiService, MovieRatingService movieRatingService) {
+    public MovieController(MovieApiService movieApiService, MovieRatingService movieRatingService, RecommendationService recommendationService) {
         this.movieApiService = movieApiService;
         this.movieRatingService = movieRatingService;
+        this.recommendationService = recommendationService;
     }
 
     @GetMapping("/")
@@ -62,4 +65,17 @@ public class MovieController {
         }
         return "redirect:/movie/" + id;
     }
+
+    @GetMapping("/recommendations")
+    public String recommendations(Model model, Authentication authentication) {
+        if (authentication == null) {
+            return "redirect:/login";
+        }
+
+        List<MovieDto> recommendations = recommendationService.getRecommendationsForUser(authentication.getName(), 10);
+        model.addAttribute("recommendations", recommendations);
+        model.addAttribute("pageTitle", "Your Recommendations");
+        return "recommendations";
+    }
+
 }

@@ -1,0 +1,195 @@
+/* recommendations.css - Styled to match trending section */
+
+/* Recommendations section */
+.recommendations-section {
+    margin-top: 20px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.recommendations-section h2 {
+    text-align: left;
+    color: #333;
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+
+.recommendations-subtitle {
+    text-align: left;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+    margin-left: 10px;
+    font-style: italic;
+}
+
+/* Movie list - exactly like trending section */
+.movie-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    padding: 10px;
+}
+
+.movie-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.movie-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.movie-poster {
+    width: 100%;
+    height: 225px;
+    overflow: hidden;
+}
+
+.movie-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-poster {
+    width: 100%;
+    height: 225px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: italic;
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+}
+
+.movie-info {
+    padding: 5px;
+    text-align: center;
+}
+
+.movie-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 0 4px 0;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: ellipsis;
+}
+
+.year-rating-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.movie-year {
+    color: black;
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.movie-genre {
+    color: black;
+    font-style: italic;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.movie-rating {
+    color: #ffa500;
+    margin-bottom: 5px;
+}
+
+/* No recommendations message */
+.no-recommendations {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.no-recommendations-content {
+    text-align: center;
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.no-recommendations-content h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.no-recommendations-content p {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 1.1em;
+}
+
+.search-movies-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.search-movies-btn:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* Action buttons */
+.recommendations-actions {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    color: white;
+}
