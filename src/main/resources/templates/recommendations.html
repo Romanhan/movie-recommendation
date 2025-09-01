@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Your Recommendations - Movie Recommender</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/recommendations.css}">
+</head>
+
+<body>
+    <div th:replace="~{header :: header}"></div>
+    
+    <main>
+        <!-- Show message if user hasn't rated any movies yet -->
+        <div th:if="${recommendations.empty}" class="no-recommendations">
+            <div class="no-recommendations-content">
+                <h2>No Recommendations Yet</h2>
+                <p>Rate some movies to get personalized recommendations!</p>
+                <a th:href="@{/search}" class="search-movies-btn">Search Movies to Rate</a>
+            </div>
+        </div>
+
+        <!-- Show recommendations if available - styled like trending section -->
+        <section th:if="${!recommendations.empty}" class="recommendations-section">
+            <h2>Your Personal Recommendations</h2>
+            <p class="recommendations-subtitle">Based on your movie ratings and preferences</p>
+            
+            <div class="movie-list">
+                <div class="movie-card" th:each="movie : ${recommendations}">
+                    <a th:href="@{'/movie/' + ${movie.id}}">
+                        <div class="movie-poster">
+                            <img th:if="${movie.posterPath != null}"
+                                th:src="'https://image.tmdb.org/t/p/w200' + ${movie.posterPath}"
+                                th:alt="${movie.title}">
+                            <div class="no-poster" th:if="${movie.posterPath == null}">
+                                No Poster Available
+                            </div>
+                        </div>
+                        <div class="movie-info">
+                            <h3 class="movie-title" th:text="${movie.title}">Movie Title</h3>
+                            <span class="year-rating-container">
+                                <span class="movie-year"
+                                    th:text="${#strings.length(movie.releaseDate) >= 4 ? #strings.substring(movie.releaseDate,0,4) : ''}">
+                                    Year</span>
+                                <span class="movie-rating">
+                                    ★ <span th:text="${#numbers.formatDecimal(movie.rating, 1, 1)}"></span>
+                                </span>
+                            </span>
+                            <div class="movie-genre">
+                                <div th:each="genre, iterStat : ${movie.genres}" th:if="${iterStat.index &lt; 3}">
+                                    <span th:text="${genre.name}"></span>
+                                </div>
+                                <div th:if="${movie.genres.size() &gt; 3}">
+                                    <span>...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action buttons -->
+        <div th:if="${!recommendations.empty}" class="recommendations-actions">
+            <a th:href="@{/search}" class="btn btn-secondary">Find More Movies</a>
+            <a th:href="@{/}" class="btn btn-primary">Back to Home</a>
+        </div>
+    </main>
+
+    <div th:replace="~{footer :: footer}"></div>
+</body>
+
+</html>
