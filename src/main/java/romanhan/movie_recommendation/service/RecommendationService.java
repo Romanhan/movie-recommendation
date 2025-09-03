@@ -70,6 +70,10 @@ public class RecommendationService {
 
         return candidateMovies.stream()
                 .filter(movie -> !ratedMovies.contains(movie.getId()))
+                .collect(Collectors.toMap(
+                        MovieDto::getId, movie -> movie, (first, second) -> first,
+                        LinkedHashMap::new))
+                .values().stream()
                 .limit(limit)
                 .collect(Collectors.toList());
     }
