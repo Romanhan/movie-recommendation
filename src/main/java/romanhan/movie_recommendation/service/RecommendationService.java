@@ -18,7 +18,8 @@ public class RecommendationService {
 
     private static final double LIKED_RATING_THRESHOLD = 7.0;
 
-    public RecommendationService(UserMovieRatingRepository userMovieRatingRepository, MovieApiService movieApiService, UserService userService) {
+    public RecommendationService(UserMovieRatingRepository userMovieRatingRepository, MovieApiService movieApiService,
+            UserService userService) {
         this.userMovieRatingRepository = userMovieRatingRepository;
         this.movieApiService = movieApiService;
         this.userService = userService;
@@ -31,25 +32,25 @@ public class RecommendationService {
 
         if (userRatings.isEmpty()) {
             return movieApiService.getTrendingMovies().stream()
-            .limit(limit)
-            .collect(Collectors.toList());
+                    .limit(limit)
+                    .collect(Collectors.toList());
         }
 
         Map<String, Double> genrePreferences = analyzeGenrePreferences(userRatings);
 
         List<Long> ratedMovies = userRatings.stream()
-        .map(UserMovieRating::getMovieId)
-        .collect(Collectors.toList());
+                .map(UserMovieRating::getMovieId)
+                .collect(Collectors.toList());
 
         List<MovieDto> recommendations = findRecommendedMovies(genrePreferences, ratedMovies, limit);
 
         return recommendations;
-        
+
     }
 
     public Map<String, Double> analyzeGenrePreferences(List<UserMovieRating> userMovieRatings) {
         Map<String, Double> genrePreferences = new HashMap<>();
-        
+
         for (UserMovieRating rating : userMovieRatings) {
             MovieDto movie = movieApiService.getMovie(rating.getMovieId());
 
@@ -68,17 +69,17 @@ public class RecommendationService {
         List<MovieDto> candidateMovies = getCandidateMovies(getPreferences);
 
         return candidateMovies.stream()
-        .filter(movie -> !ratedMovies.contains(movie.getId()))
-        .limit(limit)
-        .collect(Collectors.toList());
+                .filter(movie -> !ratedMovies.contains(movie.getId()))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     private List<MovieDto> getCandidateMovies(Map<String, Double> genrePreference) {
         Set<MovieDto> allCandidates = new HashSet<>();
-        
+
         for (String genre : genrePreference.keySet()) {
             try {
-                List<MovieDto> genreMovies = movieApiService.searchMovies(genre);
+                List<MovieDto> genreMovies = movieApiService.getMoviesByGenre(genre);
                 allCandidates.addAll(genreMovies);
             } catch (Exception e) {
                 // TODO. Handle exception, add logger
