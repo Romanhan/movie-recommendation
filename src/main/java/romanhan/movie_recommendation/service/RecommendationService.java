@@ -16,7 +16,7 @@ public class RecommendationService {
     private final MovieApiService movieApiService;
     private final UserService userService;
 
-    private static final double LIKED_RATING_THRESHOLD = 7.0;
+    private static final double LIKED_RATING_THRESHOLD = 6.0;
 
     public RecommendationService(UserMovieRatingRepository userMovieRatingRepository, MovieApiService movieApiService,
             UserService userService) {
@@ -52,12 +52,16 @@ public class RecommendationService {
         Map<String, Double> genrePreferences = new HashMap<>();
 
         for (UserMovieRating rating : userMovieRatings) {
-            MovieDto movie = movieApiService.getMovie(rating.getMovieId());
+            if (rating.getRating() >= LIKED_RATING_THRESHOLD) {
+                MovieDto movie = movieApiService.getMovie(rating.getMovieId());
 
-            if (movie.getGenres() != null && !movie.getGenres().isEmpty()) {
-                for (MovieDto.Genre genre : movie.getGenres()) {
-                    String genreName = genre.getName();
-                    genrePreferences.put(genreName, genrePreferences.getOrDefault(genreName, 0.0) + rating.getRating());
+                if (movie.getGenres() != null && !movie.getGenres().isEmpty()) {
+                    for (MovieDto.Genre genre : movie.getGenres()) {
+                        String genreName = genre.getName();
+                        double weight = rating.getRating() - 5.0;
+                        genrePreferences.put(genreName,
+                                genrePreferences.getOrDefault(genreName, 0.0) + weight);
+                    }
                 }
             }
         }

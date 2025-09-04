@@ -30,7 +30,7 @@ public class RecommendationServiceTest {
         movieApiService = mock(MovieApiService.class);
         userService = mock(UserService.class);
         recommendationService = new RecommendationService(userMovieRatingRepository, movieApiService, userService);
-    } 
+    }
 
     @Test
     void getRecommendationsForUser_NewUser_ShouldReturnTrendingMovies() {
@@ -41,7 +41,7 @@ public class RecommendationServiceTest {
 
         when(userService.findByUsername(username)).thenReturn(user);
         when(userMovieRatingRepository.findByUser(user)).thenReturn(List.of());
-         
+
         MovieDto trendingMovie = new MovieDto();
         trendingMovie.setId(1L);
         trendingMovie.setTitle("Trending Movie");
@@ -64,8 +64,8 @@ public class RecommendationServiceTest {
 
         UserMovieRating rating = new UserMovieRating();
         rating.setMovieId(100L);
-        rating.setRating(8.0);        
-        
+        rating.setRating(8.0);
+
         MovieDto ratedMovie = new MovieDto();
         ratedMovie.setId(100L);
         ratedMovie.setGenres(List.of(new MovieDto.Genre(1L, "Action")));
@@ -77,7 +77,7 @@ public class RecommendationServiceTest {
         when(userService.findByUsername(username)).thenReturn(user);
         when(userMovieRatingRepository.findByUser(user)).thenReturn(List.of(rating));
         when(movieApiService.getMovie(100L)).thenReturn(ratedMovie);
-        when(movieApiService.searchMovies("Action")).thenReturn(List.of(recommendedMovie));
+        when(movieApiService.getMoviesByGenre("Action")).thenReturn(List.of(recommendedMovie));
         when(movieApiService.getTrendingMovies()).thenReturn(List.of());
 
         // When
@@ -94,7 +94,7 @@ public class RecommendationServiceTest {
         // Given
         UserMovieRating rating = new UserMovieRating();
         rating.setMovieId(1L);
-        rating.setRating(8.0);        
+        rating.setRating(8.0);
 
         MovieDto movie = new MovieDto();
         movie.setId(1L);
@@ -107,18 +107,54 @@ public class RecommendationServiceTest {
 
         // Then
         assertEquals(2, result.size());
-        assertEquals(8.0, result.get("Action"));
-        assertEquals(8.0, result.get("Adventure"));
+        assertEquals(3.0, result.get("Action"));
+        assertEquals(3.0, result.get("Adventure"));
+    }
 
+    @Test
+    void analyzeGenrePreferences_ShouldOnlyCountHighRatedMoviesAndWeightByScore() {
+        // Given
+        UserMovieRating highActionRating = new UserMovieRating();
+        highActionRating.setMovieId(1L);
+        highActionRating.setRating(8.0); // Should contribute 3.0 weight
+
+        UserMovieRating veryHighActionRating = new UserMovieRating();
+        veryHighActionRating.setMovieId(2L);
+        veryHighActionRating.setRating(10.0); // Should contribute 5.0 weight
+
+        UserMovieRating lowHorrorRating = new UserMovieRating();
+        lowHorrorRating.setMovieId(3L);
+        lowHorrorRating.setRating(3.0); // Should be ignored
+
+        MovieDto actionMovie1 = new MovieDto();
+        actionMovie1.setGenres(List.of(new MovieDto.Genre(1L, "Action")));
+
+        MovieDto actionMovie2 = new MovieDto();
+        actionMovie2.setGenres(List.of(new MovieDto.Genre(1L, "Action")));
+
+        MovieDto horrorMovie = new MovieDto();
+        horrorMovie.setGenres(List.of(new MovieDto.Genre(2L, "Horror")));
+
+        when(movieApiService.getMovie(1L)).thenReturn(actionMovie1);
+        when(movieApiService.getMovie(2L)).thenReturn(actionMovie2);
+        when(movieApiService.getMovie(3L)).thenReturn(horrorMovie);
+
+        // When
+        Map<String, Double> result = recommendationService.analyzeGenrePreferences(
+                List.of(highActionRating, veryHighActionRating, lowHorrorRating));
+
+        // Then
+        assertEquals(8.0, result.get("Action")); // 3.0 + 5.0 = 8.0
+        assertFalse(result.containsKey("Horror")); // Low rating ignored
     }
 
     @Test
     void findRecommendedMovies() {
         // Given
-        Map<String, Double> genrePreferences = Map.of("Action", 10.0, "Adventure", 5.0);
+        Map<String, Double> genrePreferences = Map.of("Action", 10.0, "Adventure", 6.0);
         List<Long> ratedMovies = List.of(1L, 2L);
         int limit = 3;
-        
+
         MovieDto movie1 = new MovieDto();
         movie1.setId(3L);
         movie1.setTitle("Movie 3");
@@ -129,18 +165,19 @@ public class RecommendationServiceTest {
         movie2.setTitle("Movie 4");
         movie2.setGenres(List.of(new MovieDto.Genre(1L, "Action")));
 
-        when(movieApiService.searchMovies("Action")).thenReturn(List.of(movie1, movie2));
-        when(movieApiService.searchMovies("Adventure")).thenReturn(List.of(movie1));
+        when(movieApiService.getMoviesByGenre("Action")).thenReturn(List.of(movie1, movie2));
+        when(movieApiService.getMoviesByGenre("Adventure")).thenReturn(List.of(movie1));
 
         when(movieApiService.getTrendingMovies()).thenReturn(List.of());
 
         // When
-        List<MovieDto> recommendedMovies = recommendationService.findRecommendedMovies(genrePreferences, ratedMovies, limit);
+        List<MovieDto> recommendedMovies = recommendationService.findRecommendedMovies(genrePreferences, ratedMovies,
+                limit);
 
         // Then
         assertEquals(2, recommendedMovies.size());
         assertEquals("Movie 3", recommendedMovies.get(0).getTitle());
         assertEquals("Movie 4", recommendedMovies.get(1).getTitle());
     }
-   
+
 }
