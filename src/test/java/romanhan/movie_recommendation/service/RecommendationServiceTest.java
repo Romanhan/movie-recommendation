@@ -149,35 +149,82 @@ public class RecommendationServiceTest {
     }
 
     @Test
-    void findRecommendedMovies() {
+    void findRecommendedMovies_ShouldSortByScore() {
         // Given
-        Map<String, Double> genrePreferences = Map.of("Action", 10.0, "Adventure", 6.0);
-        List<Long> ratedMovies = List.of(1L, 2L);
+        Map<String, Double> genrePreferences = Map.of("Action", 16.0, "Adventure", 5.0); // Action preferred more
+        List<Long> ratedMovies = List.of();
         int limit = 3;
 
         MovieDto movie1 = new MovieDto();
-        movie1.setId(3L);
-        movie1.setTitle("Movie 3");
-        movie1.setGenres(List.of(new MovieDto.Genre(1L, "Action"), new MovieDto.Genre(2L, "Adventure")));
+        movie1.setId(1L);
+        movie1.setTitle("Action Movie - Low Rating");
+        movie1.setRating(6.0); // Low TMDB rating
+        movie1.setGenres(List.of(new MovieDto.Genre(1L, "Action")));
 
         MovieDto movie2 = new MovieDto();
-        movie2.setId(4L);
-        movie2.setTitle("Movie 4");
-        movie2.setGenres(List.of(new MovieDto.Genre(1L, "Action")));
+        movie2.setId(2L);
+        movie2.setTitle("Adventure Movie - High Rating");
+        movie2.setRating(9.0); // High TMDB rating
+        movie2.setGenres(List.of(new MovieDto.Genre(2L, "Adventure")));
 
-        when(movieApiService.getMoviesByGenre("Action")).thenReturn(List.of(movie1, movie2));
-        when(movieApiService.getMoviesByGenre("Adventure")).thenReturn(List.of(movie1));
+        MovieDto movie3 = new MovieDto();
+        movie3.setId(3L);
+        movie3.setTitle("Action Adventure - Medium Rating");
+        movie3.setRating(7.5); // Medium TMDB rating
+        movie3.setGenres(List.of(new MovieDto.Genre(1L, "Action"), new MovieDto.Genre(2L, "Adventure")));
 
+        when(movieApiService.getMoviesByGenre("Action")).thenReturn(List.of(movie1, movie3));
+        when(movieApiService.getMoviesByGenre("Adventure")).thenReturn(List.of(movie2, movie3));
         when(movieApiService.getTrendingMovies()).thenReturn(List.of());
 
         // When
-        List<MovieDto> recommendedMovies = recommendationService.findRecommendedMovies(genrePreferences, ratedMovies,
-                limit);
+        List<MovieDto> result = recommendationService.findRecommendedMovies(genrePreferences, ratedMovies, limit);
 
         // Then
-        assertEquals(2, recommendedMovies.size());
-        assertEquals("Movie 3", recommendedMovies.get(0).getTitle());
-        assertEquals("Movie 4", recommendedMovies.get(1).getTitle());
+        assertEquals(3, result.size());
+
+        // Movie 3 should be first: (16.0 + 5.0) + (7.5 * 0.5) = 24.75
+        assertEquals("Action Adventure - Medium Rating", result.get(0).getTitle());
+
+        // Movie 1 should be second: 16.0 + (6.0 * 0.5) = 19.0
+        assertEquals("Action Movie - Low Rating", result.get(1).getTitle());
+
+        // Movie 2 should be third: 5.0 + (9.0 * 0.5) = 9.5
+        assertEquals("Adventure Movie - High Rating", result.get(2).getTitle());
     }
 
+    @Test
+    void findRecommendedMovies_MovieWithoutGenres_ShouldStillGetTMDBBonus() {
+        // Given
+        Map<String, Double> genrePreferences = Map.of("Action", 10.0);
+        List<Long> ratedMovies = List.of();
+        int limit = 2;
+
+        MovieDto movieNoGenres = new MovieDto();
+        movieNoGenres.setId(1L);
+        movieNoGenres.setTitle("No Genres Movie");
+        movieNoGenres.setRating(9.5);
+        movieNoGenres.setGenres(List.of()); // No genres
+
+        MovieDto movieWithGenres = new MovieDto();
+        movieWithGenres.setId(2L);
+        movieWithGenres.setTitle("Action Movie");
+        movieWithGenres.setRating(6.0);
+        movieWithGenres.setGenres(List.of(new MovieDto.Genre(1L, "Action")));
+
+        when(movieApiService.getMoviesByGenre("Action")).thenReturn(List.of(movieWithGenres));
+        when(movieApiService.getTrendingMovies()).thenReturn(List.of(movieNoGenres));
+
+        // When
+        List<MovieDto> result = recommendationService.findRecommendedMovies(genrePreferences, ratedMovies, limit);
+
+        // Then
+        assertEquals(2, result.size());
+
+        // Action movie should be first: 10.0 + (6.0 * 0.5) = 13.0
+        assertEquals("Action Movie", result.get(0).getTitle());
+
+        // No-genres movie should be second: 0.0 + (9.5 * 0.5) = 4.75
+        assertEquals("No Genres Movie", result.get(1).getTitle());
+    }
 }

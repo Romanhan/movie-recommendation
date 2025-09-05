@@ -45,7 +45,6 @@ public class RecommendationService {
         List<MovieDto> recommendations = findRecommendedMovies(genrePreferences, ratedMovies, limit);
 
         return recommendations;
-
     }
 
     public Map<String, Double> analyzeGenrePreferences(List<UserMovieRating> userMovieRatings) {
@@ -78,6 +77,9 @@ public class RecommendationService {
                         MovieDto::getId, movie -> movie, (first, second) -> first,
                         LinkedHashMap::new))
                 .values().stream()
+                .sorted((m1, m2) -> Double.compare(
+                        calculateMovieScore(m2, getPreferences),
+                        calculateMovieScore(m1, getPreferences)))
                 .limit(limit)
                 .collect(Collectors.toList());
     }
@@ -97,5 +99,20 @@ public class RecommendationService {
         allCandidates.addAll(movieApiService.getTrendingMovies());
 
         return new ArrayList<>(allCandidates);
+    }
+
+    private double calculateMovieScore(MovieDto movie, Map<String, Double> genrePreferences) {
+        if (movie.getGenres() == null || movie.getGenres().isEmpty()) {
+            return movie.getRating() * 0.5;
+        }
+
+        double score = 0.0;
+
+        for (MovieDto.Genre genre : movie.getGenres()) {
+            score += genrePreferences.getOrDefault(genre.getName(), 0.0);
+        }
+
+        score += movie.getRating() * 0.5;
+        return score;
     }
 }
