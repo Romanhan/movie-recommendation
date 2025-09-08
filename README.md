@@ -33,13 +33,17 @@ Version 1.0 features:
 * Build Tools: Maven
 
 ## Main page
-![{3AED9D0B-983E-40E3-A140-C1BEAF3D2FB6}](https://github.com/user-attachments/assets/27bc7bc0-6d4b-4ffc-a3a7-338a1c05b4b9)
+<img width="1153" height="955" alt="image" src="https://github.com/user-attachments/assets/c1e1a7ef-b325-475d-8723-d50d4f67bcf2" />
+
+## Recommendation page
+<img width="1132" height="930" alt="image" src="https://github.com/user-attachments/assets/9cacf977-7f2a-43aa-89e1-bca0977e3f1a" />
 
 ## Search page
 ![{6D3A20EE-A3EA-41E8-9A4F-09AA2D51EE29}](https://github.com/user-attachments/assets/e00120ce-1377-4f34-b7d0-a2107bd884b0)
 
 ## Movie details page
-![2024-10-16_15h31_21](https://github.com/user-attachments/assets/84d0e740-2c3e-4fee-a15c-6b16cf6fc912)
+<img width="1273" height="792" alt="image" src="https://github.com/user-attachments/assets/cac286ea-0c9b-4696-a008-35337f386e4d" />
+
 
 
 
