@@ -24,7 +24,7 @@ Version 1.0 features:
 - [x] Set up a database to save users
 - [x] Add user reristration/login 
 - [x] Create recommendation logic
-  - [ ] Improove recommendation algorithm
+  - [x] Improove recommendation algorithm
 
 ## Tech Stack
 * Backend: Java 21 (Spring Framework)
