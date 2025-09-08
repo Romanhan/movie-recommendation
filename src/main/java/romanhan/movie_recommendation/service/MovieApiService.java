@@ -89,6 +89,34 @@ public class MovieApiService {
 				.collect(Collectors.toList());
 	}
 
+	public List<MovieDto> getMoviesByGenre(String genreName) {
+		Long genreId = allGenres.stream()
+				.filter(genre -> genre.getName().equalsIgnoreCase(genreName))
+				.map(MovieDto.Genre::getId)
+				.findFirst()
+				.orElse(null);
+
+		if (genreId == null) {
+			return getTrendingMovies();
+		}
+
+		List<MovieDto> movies = webClient.get()
+				.uri(uriBuilder -> uriBuilder
+						.path("/discover/movie")
+						.queryParam("api_key", apiKey)
+						.queryParam("with_genres", genreId)
+						.queryParam("page", 1)
+						.queryParam("sort_by", "popularity.desc")
+						.build())
+				.retrieve()
+				.bodyToMono(MovieSearchResponse.class)
+				.map(MovieSearchResponse::getResults)
+				.block();
+
+		assignGenresToMovies(movies);
+		return movies != null ? movies : getTrendingMovies();
+	}
+
 	private void assignGenresToMovies(List<MovieDto> movies) {
 		for (MovieDto movie : movies) {
 			if (movie.getGenreIds() != null) {

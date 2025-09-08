@@ -33,4 +33,29 @@ public class MovieApiServiceTest {
         assertEquals("Fight Club", movie.getTitle());
     }
 
+    @Test
+    void testGetMoviesByGenre() {
+        // When
+        List<MovieDto> moviesWithGenre = movieApiService.getMoviesByGenre("Action");
+
+        // Then
+        assertFalse(moviesWithGenre.isEmpty(), "Movies list should not be empty");
+        assertNotNull(moviesWithGenre.get(0).getTitle(), "Movies should have titles");
+        assertEquals(moviesWithGenre.get(0).getGenres().get(0).getName(), "Action",
+                "First movie should have 'Action' genre");
+    }
+
+    @Test
+    void testGetMoviesByGenre_InvalidGenre() {
+        // When
+        List<MovieDto> moviesWithInvalidGenre = movieApiService.getMoviesByGenre("InvalidGenre");
+        List<MovieDto> trendingMovies = movieApiService.getTrendingMovies();
+
+        // Then
+        assertEquals(trendingMovies.size(), moviesWithInvalidGenre.size(),
+                "Fake genre should return trending movies as fallback");
+        assertEquals(trendingMovies.get(0).getId(), moviesWithInvalidGenre.get(0).getId(),
+                "Should return exact same movies as trending");
+    }
+
 }
